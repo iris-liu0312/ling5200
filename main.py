@@ -44,6 +44,7 @@ def practice(dataset, conj, sent_type):
     conversion = 'common_sentence' if sent_type == 'business_sentence' else 'business_sentence'
     if conj != 'all':
         dataset = dataset[dataset['conjugation_type']==conj]
+    dataset = dataset.sample(frac=1)
     for _, row in dataset.iterrows():
         q = input(row[sent_type])
         if q in ['Q', 'q']:
