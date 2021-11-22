@@ -31,10 +31,31 @@ conjugations = {'と申します': ('と申します', '「です」'),
                 'ご覧ください': ('てください', '「見てください」'),
                 'お目通しください': ('てください', '「見てください」')}
 
+# manually code dictionary of o-conjugations
+o_conj = {'お出かけください': '出かけてください',
+          'お楽しみください': '楽しんでください',
+          'お電話をください': '電話をかけてください',
+          'お電話ください': '電話をかけてください',
+          'お聞かせください': '聞かせてください',
+          'おたずねください': '来てください',
+          'お尋ねください': '来てください',
+          'お越しください': '来てください',
+          'お選びください': '選んでください',
+          'お待ちください': '待ってください',
+          'おまちください': 'まってください',
+          'お確かめください': '確かめてください',
+          'お入りください': '入ってください',
+          'お過ごしください': '過ごしてください',
+          'お考えください': '考えてください',
+          'お座りください': '座ってください',
+          'お声掛けください': '声をかけてください',
+          'お任せください': '任せてください',
+          'お答えください': '答えてください',
+          'お申しつけください': '申しつけてください'}
+
 conj_type = []
 common_sent = []
 business_sent = []
-ogo_conj = set()
 # add conjugations and converted sentence to dataset
 for sent in data_sent:
     for key in conjugations.keys():
@@ -44,26 +65,26 @@ for sent in data_sent:
             business_sent.append(sent.replace(key, f"「{key}」"))
 
     # the two common conjugations, お/ご...ください → ...してください
-    # problem: there are more conjugations involved with the root than originally thought
-    # TODO: deal with the "exception" conjugations
+    # note: there are more conjugations involved with the root than originally thought
     research = re.search(r"[おご].{2,4}ください", sent) # [おご].{2,4}ください
     if research is not None and research.group() not in conjugations.keys():
-        ogo_conj.add(research.group())
         # ご... only requires a simple replace
         if research.group()[0] == 'ご':
+            # unfortunate inclusion (過)ごしてきてください
+            if research.group() == 'ごしてきてください':
+                continue
             common_term = f'「{research.group()[1:-4]}してください」'
         # お... requires more conjugation
-        elif research.group() == 'お待ちください':
-            common_term = '「待ってください」'
-        # unfortunate verb that isn't a conjugation but was captured anyway
+        # unfortunate inclusion of verb that isn't a business conjugation
         elif research.group() == 'おいてください':
             continue
+        elif research.group() in o_conj.keys():
+            common_term = f'「{o_conj[research.group()]}」'
         else:
             common_term = research.group()
         conj_type.append('てください')
         common_sent.append(sent.replace(research.group(), common_term))
         business_sent.append(sent.replace(research.group(), f"「{research.group()}」"))
-# print(ogo_conj)
 
 # export to csv
 dataset = pd.DataFrame({'conjugation_type': conj_type,

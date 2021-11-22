@@ -1,12 +1,11 @@
 import pandas as pd
 
-dataset = pd.read_csv('corpus.csv', encoding='utf8')
-# print(dataset[dataset['conjugation_type']=='どう'].shape)
-
-
 def select_form():
     print("\n=== Settings ======================================================")
-    sent_type = input("Do you want to practice converting business terms to informal terms?\n(Y/N) >")
+    print("Do you want to practice converting business terms to informal terms?")
+    print("Yes: business to informal")
+    print("No: informal to business")
+    sent_type = input("(Y/N) >")
     if input in ['Q', 'q', '']:
         return None
     sent_type = 'business_sentence' if sent_type in ['Y','y','Yes','yes'] else 'common_sentence'
@@ -19,6 +18,8 @@ def select_conj(dataset):
     for i in set(dataset['conjugation_type']):
         conj_type[unq_id] = i
         unq_id += 1
+    conj_type[unq_id] = 'all'
+    unq_id += 1
 
     print("Which conjugation do you want to practice? Enter the number of the corresponding conjugation.")
     for i in conj_type.keys():
@@ -41,12 +42,16 @@ def practice(dataset, conj, sent_type):
     print(f"Convert the term in the brackets 「...」to {conversion}.")
     print("Press enter to show the correct answer.")
     conversion = 'common_sentence' if sent_type == 'business_sentence' else 'business_sentence'
+    if conj != 'all':
+        dataset = dataset[dataset['conjugation_type']==conj]
     for _, row in dataset.iterrows():
         q = input(row[sent_type])
         if q in ['Q', 'q']:
             return None
         print(row[conversion])
         q = input("Enter for the next sentence. >")
+        if q in ['Q', 'q']:
+            return None
     return 'f'
 
 def main():
@@ -66,7 +71,7 @@ def main():
         if conj is None:
             return
 
-        finish = practice(dataset[dataset['conjugation_type']==conj], conj, sent_type)
+        finish = practice(dataset, conj, sent_type)
         if finish is None:
             return
 
