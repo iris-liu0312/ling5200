@@ -75,7 +75,7 @@ def main():
         if finish is None:
             return
 
-        cont_q = input("You've finished practicing this set. Do you want to continue?\n(Y/N) >")
+        cont_q = input("You've finished practicing this set. Do you want to practice another set?\n(Y/N) >")
         if input in ['Q', 'q', '']:
             return 
         cont = True if cont_q in ['Y','y','Yes','yes'] else False
