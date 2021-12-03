@@ -2,11 +2,11 @@ import pandas as pd
 
 def select_form():
     print("\n=== Settings ======================================================")
-    print("Do you want to practice converting business terms to informal terms?")
-    print("Yes: business to informal")
-    print("No: informal to business")
+    print("Do you want to practice converting business terms to common terms?")
+    print("Yes: business to common")
+    print("No: common to business")
     sent_type = input("(Y/N) >")
-    if input in ['Q', 'q', '']:
+    if sent_type in ['Q', 'q', '']:
         return None
     sent_type = 'business_sentence' if sent_type in ['Y','y','Yes','yes'] else 'common_sentence'
     print(f"You will be given {sent_type.replace('_', ' ')}s to convert.\n")
@@ -38,7 +38,7 @@ def select_conj(dataset):
 
 def practice(dataset, conj, sent_type):
     print(f"\n=== {conj} ======================================================")
-    conversion = 'informal form' if sent_type == 'business_sentence' else 'business form'
+    conversion = 'common form' if sent_type == 'business_sentence' else 'business form'
     print(f"Convert the term in the brackets 「...」to {conversion}.")
     print("Press enter to show the correct answer.")
     conversion = 'common_sentence' if sent_type == 'business_sentence' else 'business_sentence'
@@ -57,7 +57,7 @@ def practice(dataset, conj, sent_type):
 
 def main():
     print("====================================================================")
-    print("Welcome to the mini Japanese Business-Informal conjugation program.")
+    print("Welcome to the mini Japanese Business-Common conjugation program.")
     print("This program will give you sentences with the conjugation you want\nto practice.")
     print("Press Ctrl+C or type 'q' at any time if you want to quit.")
     
